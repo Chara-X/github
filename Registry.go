@@ -20,7 +20,7 @@ func (r *Registry) Push(registry, branch string) {
 		if isRepo(path) && !slices.Contains(r.Exclude, info.Name()) {
 			log.Println(path)
 			log.Println(fmt.Sprintln("git add --all && git commit --message Up && git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
-			var cmd = exec.Command("sh", "-c", fmt.Sprintln("git add --all && git commit --message Up && git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
+			var cmd = exec.Command("sh", "-c", fmt.Sprintln("git add --all; git commit --message Up; git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
 			cmd.Dir = path
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = os.Stdout
