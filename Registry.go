@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"io/fs"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,6 +18,8 @@ type Registry struct {
 func (r *Registry) Push(registry, branch string) {
 	filepath.Walk(r.Path, func(path string, info fs.FileInfo, err error) error {
 		if isRepo(path) && !slices.Contains(r.Exclude, info.Name()) {
+			log.Println(path)
+			log.Println(fmt.Sprintln("git add --all && git commit --message Up && git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
 			var cmd = exec.Command("sh", "-c", fmt.Sprintln("git add --all && git commit --message Up && git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
 			cmd.Dir = path
 			cmd.Stdin = os.Stdin
@@ -30,6 +33,8 @@ func (r *Registry) Push(registry, branch string) {
 func (r *Registry) Pull(registry, branch string) {
 	filepath.Walk(r.Path, func(path string, info fs.FileInfo, err error) error {
 		if isRepo(path) && !slices.Contains(r.Exclude, info.Name()) {
+			log.Println(path)
+			log.Println(fmt.Sprintln("git add --all && git commit --message Up && git pull", registry+"/"+info.Name()+".git", branch))
 			var cmd = exec.Command("sh", "-c", fmt.Sprintln("git add --all && git commit --message Up && git pull", registry+"/"+info.Name()+".git", branch))
 			cmd.Dir = path
 			cmd.Stdin = os.Stdin
