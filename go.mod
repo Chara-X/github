@@ -1,3 +1,3 @@
-module github.com/Chara-X/git
+module github.com/Chara-X/github
 
 go 1.22.2

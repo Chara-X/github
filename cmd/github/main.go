@@ -3,12 +3,12 @@ package main
 import (
 	"os"
 
-	"github.com/Chara-X/git"
+	"github.com/Chara-X/github"
 )
 
 func main() {
-	var workdir, _ = os.Getwd()
-	var reg = git.Registry{Path: workdir}
+	var reg = github.Registry{}
+	reg.Path, _ = os.Getwd()
 	switch os.Args[1] {
 	case "push":
 		reg.Push(os.Args[2], os.Args[3])
