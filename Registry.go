@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"sync"
 )
 
 type Registry struct {
@@ -17,9 +18,12 @@ type Registry struct {
 }
 
 func (r *Registry) Push(registry, branch string) {
+	var wg = sync.WaitGroup{}
 	filepath.Walk(r.Path, func(path string, info fs.FileInfo, err error) error {
 		if isRepo(path) && !slices.Contains(r.Exclude, info.Name()) {
+			wg.Add(1)
 			go func() {
+				defer wg.Done()
 				var cmd = exec.Command("sh", "-c", fmt.Sprintln("git add --all; git commit --message Up; git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
 				cmd.Dir = path
 				var buffer, _ = cmd.CombinedOutput()
@@ -29,6 +33,7 @@ func (r *Registry) Push(registry, branch string) {
 		}
 		return nil
 	})
+	wg.Wait()
 }
 func (r *Registry) Pull(registry, branch string) {
 	filepath.Walk(r.Path, func(path string, info fs.FileInfo, err error) error {
