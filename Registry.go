@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"slices"
-	"strings"
 	"sync"
 )
 
@@ -26,9 +25,8 @@ func (r *Registry) Push(registry, branch string) {
 				defer wg.Done()
 				var cmd = exec.Command("sh", "-c", fmt.Sprintln("git add --all; git commit --message Up; git push", registry+"/"+info.Name()+".git", "HEAD:"+branch))
 				cmd.Dir = path
-				var buffer, _ = cmd.CombinedOutput()
-				log.Println(strings.Join([]string{path, fmt.Sprintln("git add --all; git commit --message Up; git push", registry+"/"+info.Name()+".git", "HEAD:"+branch), string(buffer)}, "\n"))
-				cmd.Run()
+				var out, _ = cmd.CombinedOutput()
+				log.Println(path + "\n" + string(out))
 			}()
 		}
 		return nil
