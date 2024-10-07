@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	var reg = github.Registry{Exclude: os.Args[4:]}
+	var reg = github.Registry{Ignore: os.Args[4:]}
 	reg.Path, _ = os.Getwd()
 	switch os.Args[1] {
 	case "push":
